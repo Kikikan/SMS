@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     EditText message;
     Button button;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
