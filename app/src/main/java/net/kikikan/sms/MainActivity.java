@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +15,14 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-
-
+public class MainActivity extends AppCompatActivity
+{
     final int SEND_SMS_PERMISSION_REQUEST_CODE = 1;
     final String SENT = "SMS_SENT";
     final String DELIVERED = "SMS_DELIVERED";
@@ -37,32 +33,39 @@ public class MainActivity extends AppCompatActivity {
     EditText message;
     Button button;
 
+    ListView listView;
+    final String[] telefonszamok = new String[] {"06 30 513 3238", "06 20 257 2393", "06 30 222 2222"};
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final String[] telefonszamok = new String[] {"06 30 513 3238", "06 30 111 1111", "06 30 222 2222"};
 
         number = findViewById(R.id.phoneNumberEditText);
         message = findViewById(R.id.messageEditText);
         button = findViewById(R.id.sendButton);
 
-        if (!hasPermission(Manifest.permission.SEND_SMS)) {
+        if (!hasPermission(Manifest.permission.SEND_SMS))
+        {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSION_REQUEST_CODE);
         }
 
         sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
         deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
 
-        final ListView listView = (ListView) findViewById(R.id.listview);
         MyAdapter myAdapter = new MyAdapter(telefonszamok, this);
+        listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(myAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                number.setVisibility(View.VISIBLE);
                 Log.i("Tel clicked ", telefonszamok[position]);
+                number.setText(telefonszamok[position]);
             }
         });
     }
@@ -71,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        smsSentReceiver = new BroadcastReceiver() {
+        smsSentReceiver = new BroadcastReceiver()
+        {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(Context context, Intent intent)
+            {
 
                 switch(getResultCode()) {
                     case Activity.RESULT_OK:
@@ -99,11 +104,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        smsDeliveredReceiver = new BroadcastReceiver() {
+        smsDeliveredReceiver = new BroadcastReceiver()
+        {
             @Override
-            public void onReceive(Context context, Intent intent) {
-
-                switch (getResultCode()) {
+            public void onReceive(Context context, Intent intent)
+            {
+                switch (getResultCode())
+                {
                     case Activity.RESULT_OK:
                         Toast.makeText(getApplicationContext(), "SMS kézbesítve!", Toast.LENGTH_SHORT).show();
                         break;
@@ -120,21 +127,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
 
         unregisterReceiver(smsSentReceiver);
         unregisterReceiver(smsDeliveredReceiver);
     }
 
-    public boolean hasPermission(String perm) {
+    public boolean hasPermission(String perm)
+    {
         int id = ContextCompat.checkSelfPermission(this, perm);
         return (id == PackageManager.PERMISSION_GRANTED);
     }
 
-    public void onClick(View v) {
+    public void HideTextBox(View view)
+    {
+        listView.setVisibility(View.GONE);
+    }
+
+    public void onClick(View v)
+    {
         String phoneN = number.getText().toString();
         String smsM = message.getText().toString();
+        listView.setVisibility(View.VISIBLE);
 
         if (phoneN == null || phoneN.length() == 0 || smsM == null || smsM.length() == 0)
         {
