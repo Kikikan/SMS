@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     EditText number;
     EditText message;
-    Button button;
+    ImageButton button;
 
     //ListView listView;
     final String[] telefonszamok = new String[] {"06 30 513 3238", "06 20 257 2393", "06 30 222 2222"};
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity
         number = findViewById(R.id.phoneNumberEditText);
         message = findViewById(R.id.messageEditText);
         button = findViewById(R.id.sendButton);
+        button.setImageResource(R.drawable.snapchat36);
 
         if (!hasPermission(Manifest.permission.SEND_SMS))
         {
