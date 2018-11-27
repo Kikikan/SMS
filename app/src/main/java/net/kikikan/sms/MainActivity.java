@@ -137,14 +137,18 @@ public class MainActivity extends AppCompatActivity {
         String smsM = message.getText().toString();
 
         if (phoneN == null || phoneN.length() == 0 || smsM == null || smsM.length() == 0)
+        {
+            Toast.makeText(this, "Irj SMS-t valakinek", Toast.LENGTH_SHORT).show();
             return;
+        }
 
-        if (hasPermission(Manifest.permission.SEND_SMS)) {
+        if (hasPermission(Manifest.permission.SEND_SMS))
+        {
             SmsManager sm = SmsManager.getDefault();
-
             sm.sendTextMessage(phoneN, null, smsM, sentPI, deliveredPI);
         }
-        else {
+        else
+        {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSION_REQUEST_CODE);
             Toast.makeText(getApplicationContext(), "Permission megtagadva!", Toast.LENGTH_SHORT).show();
         }
