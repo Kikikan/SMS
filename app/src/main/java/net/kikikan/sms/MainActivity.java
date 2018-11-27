@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     EditText message;
     Button button;
 
-    ListView listView;
+    //ListView listView;
     final String[] telefonszamok = new String[] {"06 30 513 3238", "06 20 257 2393", "06 30 222 2222"};
 
     @Override
@@ -55,10 +56,27 @@ public class MainActivity extends AppCompatActivity
         deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
 
         MyAdapter myAdapter = new MyAdapter(telefonszamok, this);
-        listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(myAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        Spinner spinner = findViewById(R.id.spinner);
+        spinner.setAdapter(myAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                number.setVisibility(View.VISIBLE);
+                Log.i("Tel clicked ", telefonszamok[position]);
+                number.setText(telefonszamok[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //listView = (ListView) findViewById(R.id.listview);
+        //listView.setAdapter(myAdapter);
+
+        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -67,7 +85,7 @@ public class MainActivity extends AppCompatActivity
                 Log.i("Tel clicked ", telefonszamok[position]);
                 number.setText(telefonszamok[position]);
             }
-        });
+        });*/
     }
 
     @Override
@@ -141,16 +159,18 @@ public class MainActivity extends AppCompatActivity
         return (id == PackageManager.PERMISSION_GRANTED);
     }
 
+/*
     public void HideTextBox(View view)
     {
         listView.setVisibility(View.GONE);
     }
+*/
 
     public void onClick(View v)
     {
         String phoneN = number.getText().toString();
         String smsM = message.getText().toString();
-        listView.setVisibility(View.VISIBLE);
+        //listView.setVisibility(View.VISIBLE);
 
         if (phoneN == null || phoneN.length() == 0 || smsM == null || smsM.length() == 0)
         {
