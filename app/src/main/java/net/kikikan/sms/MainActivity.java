@@ -14,9 +14,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
     EditText message;
     Button button;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final String[] telefonszamok = new String[] {"06 30 513 3238", "06 30 111 1111", "06 30 222 2222"};
 
         number = findViewById(R.id.phoneNumberEditText);
         message = findViewById(R.id.messageEditText);
@@ -48,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
         sentPI = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
         deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
+
+        final ListView listView = (ListView) findViewById(R.id.listview);
+        MyAdapter myAdapter = new MyAdapter(telefonszamok, this);
+        listView.setAdapter(myAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("Tel clicked ", telefonszamok[position]);
+            }
+        });
     }
 
     @Override
@@ -101,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(smsSentReceiver, new IntentFilter(SENT));
         registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
     }
-
 
     @Override
     protected void onPause() {
